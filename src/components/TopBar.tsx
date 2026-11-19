@@ -27,8 +27,9 @@ export const TopBar: React.FC = () => {
                   UNSAM ER1 2026
                 </span>
               </h1>
-              <p className="text-[11px] text-slate-500 hidden sm:block truncate">
-                Potencial teórico vs. centrales reales · Mareomotriz y Undimotriz
+              <p className="text-[11px] text-slate-500 truncate">
+                <span className="hidden sm:inline">Potencial teórico vs. centrales reales · Mareomotriz y Undimotriz · </span>
+                Creado por <span className="font-bold text-pink-500">AISHA MUSA</span>
               </p>
             </div>
           </div>

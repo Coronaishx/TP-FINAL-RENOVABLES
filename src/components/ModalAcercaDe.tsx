@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useSimulatorStore } from '../store/simulatorStore';
-import { X, QrCode, BookOpen, GraduationCap, ExternalLink } from 'lucide-react';
+import { X, QrCode, BookOpen, GraduationCap, ExternalLink, Linkedin } from 'lucide-react';
 import QRCode from 'qrcode';
 
 export const ModalAcercaDe: React.FC = () => {
@@ -50,19 +50,30 @@ export const ModalAcercaDe: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center gap-5 p-4 bg-blue-50/60 border border-blue-200 rounded-xl">
             <div className="flex-1 space-y-1.5 text-center sm:text-left">
               <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700">
-                Universidad Nacional de San Martín (UNSAM)
+                Sobre la autora
               </span>
-              <h3 className="text-sm font-bold text-slate-900">
-                Energías Renovables I — Ingeniería en Energía
+              <h3 className="text-lg font-black text-pink-500 tracking-tight">
+                Aisha Musa
               </h3>
+              <p className="text-xs font-semibold text-slate-700">
+                Estudiante de Ingeniería en Energía · Universidad Nacional de San Martín (UNSAM)
+              </p>
               <p className="text-xs text-slate-600">
-                Simulador interactivo desarrollado para la exposición oral del <strong>19/11/2026</strong>.
-                Objetivo pedagógico: evidenciar la distancia real entre el potencial teórico del mar y lo que entregan
-                las centrales comerciales.
+                Creadora y desarrolladora de este simulador, realizado para la exposición oral de la materia
+                Energías Renovables I (<strong>19/11/2026</strong>). Su interés está puesto en las energías renovables
+                y en cómo traducir la teoría en herramientas interactivas que acerquen los números reales de la
+                transición energética.
               </p>
-              <p className="text-[11px] text-slate-500 italic">
-                Regla de oro: No inventar datos. Todo valor numérico proviene de fuentes académicas o se rotula como supuesto ajustable calibrado.
-              </p>
+              <a
+                href="https://www.linkedin.com/in/aisha-musa-2176b61b3/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 mt-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#0A66C2] hover:bg-[#004182] text-white transition-colors shadow-xs"
+              >
+                <Linkedin className="w-3.5 h-3.5" />
+                <span>Conectá con <span className="text-pink-300">Aisha Musa</span> en LinkedIn</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
 
             {/* Código QR generado localmente sin conexión */}
