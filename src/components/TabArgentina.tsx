@@ -31,7 +31,7 @@ export const TabArgentina: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6">
       {/* Cabecera de la sección argentina */}
-      <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+      <div className="panel-mar p-4 sm:p-6">
         <div className="flex items-center space-x-2 text-sky-700 mb-2">
           <Anchor className="w-6 h-6" />
           <span className="text-xs font-bold uppercase tracking-wider">Capítulo Nacional</span>
@@ -46,8 +46,8 @@ export const TabArgentina: React.FC = () => {
       </div>
 
       {/* Tabla comparativa de sitios de marea argentinos */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+      <div className="panel-mar overflow-hidden">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 panel-mar-header flex items-center justify-between">
           <h2 className="font-bold text-slate-800 text-sm">
             Emplazamientos Mareomotrices Patagónicos (Sección 6.3)
           </h2>
@@ -145,7 +145,7 @@ export const TabArgentina: React.FC = () => {
 
       {/* Ficha técnica y ambiental de la Península Valdés */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-        <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-2.5 shadow-sm">
+        <div className="p-4 sm:p-5 panel-mar space-y-2.5">
           <h4 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
             <Sparkles className="w-4 h-4 text-amber-500" />
             La singularidad del Istmo Carlos Ameghino (Península Valdés)
@@ -162,7 +162,7 @@ export const TabArgentina: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-5 bg-white border border-slate-200 rounded-xl space-y-2.5 shadow-sm">
+        <div className="p-4 sm:p-5 panel-mar space-y-2.5">
           <h4 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
             <ShieldAlert className="w-4 h-4 text-blue-600" />
             Iniciativas Nacionales: ENARSA, Y-TEC e INVAP

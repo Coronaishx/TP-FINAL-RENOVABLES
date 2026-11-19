@@ -58,7 +58,7 @@ export const App: React.FC = () => {
   }, [selectSite, setTab, togglePause, toggleModoExposicion]);
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col font-sans text-slate-800">
+    <div className="min-h-screen fondo-mar flex flex-col font-sans text-slate-800">
       {/* Barra de navegación superior */}
       <TopBar />
 
@@ -67,7 +67,7 @@ export const App: React.FC = () => {
         {activeTab === 'simulador' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 h-full min-h-0 lg:min-h-[640px]">
             {/* Zona 1: Mapa (40% ≈ 5 columnas) */}
-            <div className="lg:col-span-5 h-[280px] sm:h-[340px] lg:h-auto lg:min-h-[380px]">
+            <div className="lg:col-span-5 h-auto">
               <MapWorld />
             </div>
 

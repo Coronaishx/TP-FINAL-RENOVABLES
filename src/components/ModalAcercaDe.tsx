@@ -27,9 +27,9 @@ export const ModalAcercaDe: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-slate-200">
+      <div className="panel-mar max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
         {/* Cabecera */}
-        <div className="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 panel-mar-header">
           <div className="flex items-center space-x-2">
             <GraduationCap className="w-5 h-5 text-blue-600" />
             <h2 className="text-base font-bold text-slate-900">
@@ -45,7 +45,7 @@ export const ModalAcercaDe: React.FC = () => {
         </div>
 
         {/* Contenido */}
-        <div className="p-6 overflow-y-auto space-y-6 text-xs text-slate-700 leading-relaxed">
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-6 text-xs text-slate-700 leading-relaxed">
           {/* Tarjeta contexto académico y QR */}
           <div className="flex flex-col sm:flex-row items-center gap-5 p-4 bg-blue-50/60 border border-blue-200 rounded-xl">
             <div className="flex-1 space-y-1.5 text-center sm:text-left">

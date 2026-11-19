@@ -3,35 +3,51 @@ import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import * as topojson from 'topojson-client';
 import countriesData from '../data/countries-110m.json';
 import { useSimulatorStore, SitioData } from '../store/simulatorStore';
-import { Compass, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { Compass, MapPin } from 'lucide-react';
+
+const RECURSO_LABEL: Record<string, string> = {
+  marea: 'Marea',
+  corriente: 'Corriente',
+  olas: 'Olas',
+};
 
 export const MapWorld: React.FC = () => {
   const { sitios, selectedSiteId, selectSite } = useSimulatorStore();
   const [zoomLevel, setZoomLevel] = useState<'world' | 'argentina'>('world');
   const [hoveredSite, setHoveredSite] = useState<SitioData | null>(null);
 
+  // Proporción ajustada al mapamundi sin Antártida: elimina las franjas vacías
   const width = 800;
-  const height = 480;
+  const height = 400;
 
-  // Proyección D3 configurada según vista mundo o vista costa argentina
+  // Países sin la Antártida (ocupa mucho espacio y no tiene sitios)
+  const geojson = useMemo(() => {
+    const countries = (countriesData as any).objects.countries;
+    const fc = topojson.feature(countriesData as any, countries) as any;
+    return {
+      ...fc,
+      features: fc.features.filter((f: any) => f.properties?.name !== 'Antarctica'),
+    };
+  }, []);
+
+  // Proyección D3: el mundo se ajusta exactamente al recuadro
   const projection = useMemo(() => {
     if (zoomLevel === 'argentina') {
       return geoNaturalEarth1()
-        .scale(1200)
-        .center([-65, -45])
+        .scale(1100)
+        .center([-63, -44])
         .translate([width / 2, height / 2]);
     }
-    return geoNaturalEarth1()
-      .scale(155)
-      .translate([width / 2, height / 2 + 20]);
-  }, [zoomLevel]);
+    return geoNaturalEarth1().fitExtent(
+      [
+        [6, 6],
+        [width - 6, height - 6],
+      ],
+      geojson
+    );
+  }, [zoomLevel, geojson]);
 
   const pathGenerator = useMemo(() => geoPath().projection(projection), [projection]);
-
-  const geojson = useMemo(() => {
-    const countries = (countriesData as any).objects.countries;
-    return topojson.feature(countriesData as any, countries) as any;
-  }, []);
 
   const getMarkerColor = (recurso: string, isSelected: boolean) => {
     if (isSelected) return '#facc15'; // Amarillo destacado de selección
@@ -40,10 +56,16 @@ export const MapWorld: React.FC = () => {
     return '#ea580c'; // Naranja olas
   };
 
+  const dotClass = (recurso: string) =>
+    recurso === 'marea' ? 'bg-blue-600' : recurso === 'corriente' ? 'bg-teal-600' : 'bg-orange-600';
+
+  const sitiosVisibles =
+    zoomLevel === 'argentina' ? sitios.filter((s) => s.pais.includes('Argentina')) : sitios;
+
   return (
-    <div className="relative flex flex-col h-full bg-slate-900/5 rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+    <div className="panel-mar relative flex flex-col h-full overflow-hidden">
       {/* Barra superior de controles del mapa */}
-      <div className="flex items-center justify-between px-3 py-2 bg-white/90 border-b border-slate-200 z-10 backdrop-blur-sm gap-1">
+      <div className="panel-mar-header flex items-center justify-between px-3 py-2 z-10 gap-1">
         <div className="flex items-center space-x-1.5 min-w-0">
           <Compass className="w-4 h-4 text-slate-600 shrink-0" />
           <span className="text-[11px] sm:text-xs font-semibold text-slate-700 uppercase tracking-wider truncate">
@@ -64,10 +86,10 @@ export const MapWorld: React.FC = () => {
         <div className="flex items-center space-x-1 shrink-0">
           <button
             onClick={() => setZoomLevel('world')}
-            className={`px-2 py-1 text-[11px] sm:text-xs font-medium rounded transition-colors ${
+            className={`px-2 py-1 text-[11px] sm:text-xs font-medium transition-colors ${
               zoomLevel === 'world'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                ? 'bg-cyan-700 text-white'
+                : 'bg-white/70 text-slate-700 hover:bg-white border border-cyan-200'
             }`}
             title="Ver mapa mundial completo"
           >
@@ -75,10 +97,10 @@ export const MapWorld: React.FC = () => {
           </button>
           <button
             onClick={() => setZoomLevel('argentina')}
-            className={`px-2 py-1 text-[11px] sm:text-xs font-medium rounded transition-colors ${
+            className={`px-2 py-1 text-[11px] sm:text-xs font-medium transition-colors ${
               zoomLevel === 'argentina'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                ? 'bg-cyan-700 text-white'
+                : 'bg-white/70 text-slate-700 hover:bg-white border border-cyan-200'
             }`}
             title="Zoom a la costa argentina y patagónica"
           >
@@ -88,29 +110,44 @@ export const MapWorld: React.FC = () => {
         </div>
       </div>
 
-      {/* Área interactiva del mapa SVG */}
-      <div className="relative flex-1 bg-sky-50/50 min-h-[300px]">
+      {/* Área interactiva del mapa SVG: altura proporcional, sin espacio vacío */}
+      <div className="relative w-full shrink-0" style={{ aspectRatio: `${width} / ${height}` }}>
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="w-full h-full select-none"
+          className="absolute inset-0 w-full h-full select-none"
           preserveAspectRatio="xMidYMid meet"
         >
+          <defs>
+            <linearGradient id="oceano" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#e0f7fa" />
+              <stop offset="100%" stopColor="#b2ebf2" />
+            </linearGradient>
+          </defs>
+
           {/* Fondo oceánico */}
-          <rect width={width} height={height} fill="#f0f9ff" />
+          <rect width={width} height={height} fill="url(#oceano)" />
 
-          {/* Graticule o paralelos sutiles */}
-          <line x1="0" y1={height / 2} x2={width} y2={height / 2} stroke="#e0f2fe" strokeWidth="0.8" strokeDasharray="4 4" />
+          {/* Ecuador sutil */}
+          <line
+            x1="0"
+            y1={projection([0, 0])?.[1] ?? height / 2}
+            x2={width}
+            y2={projection([0, 0])?.[1] ?? height / 2}
+            stroke="#80deea"
+            strokeWidth="0.8"
+            strokeDasharray="4 4"
+          />
 
-          {/* Tierras / Países */}
+          {/* Tierras / Países en tono arena */}
           <g className="countries">
             {geojson.features.map((feature: any, idx: number) => (
               <path
                 key={idx}
                 d={pathGenerator(feature) || ''}
-                fill="#e2e8f0"
-                stroke="#cbd5e1"
+                fill="#efe2c4"
+                stroke="#d6c296"
                 strokeWidth={0.6}
-                className="transition-colors hover:fill-slate-300"
+                className="transition-colors hover:fill-[#e6d3a8]"
               />
             ))}
           </g>
@@ -122,56 +159,43 @@ export const MapWorld: React.FC = () => {
               if (!coords) return null;
               const [cx, cy] = coords;
 
-              // Filtrar puntos fuera de vista si se hace zoom
               if (cx < -20 || cx > width + 20 || cy < -20 || cy > height + 20) return null;
 
               const isSelected = site.id === selectedSiteId;
               const color = getMarkerColor(site.recurso, isSelected);
+              const zoomArg = zoomLevel === 'argentina';
 
               return (
                 <g
                   key={site.id}
-                  className="cursor-pointer transition-transform group"
+                  className="cursor-pointer group"
                   onClick={() => selectSite(site.id)}
                   onMouseEnter={() => setHoveredSite(site)}
                   onMouseLeave={() => setHoveredSite(null)}
                 >
-                  {/* Halo animado si está seleccionado */}
+                  {/* Área táctil ampliada para celulares */}
+                  <circle cx={cx} cy={cy} r={14} fill="transparent" />
+
                   {isSelected && (
-                    <circle
-                      cx={cx}
-                      cy={cy}
-                      r={zoomLevel === 'argentina' ? 14 : 9}
-                      fill={color}
-                      opacity={0.3}
-                      className="animate-ping"
-                    />
+                    <circle cx={cx} cy={cy} r={zoomArg ? 14 : 10} fill={color} opacity={0.3} className="animate-ping" />
                   )}
 
-                  {/* Círculo exterior blanco para contraste */}
                   <circle
                     cx={cx}
                     cy={cy}
-                    r={isSelected ? (zoomLevel === 'argentina' ? 10 : 7) : (zoomLevel === 'argentina' ? 7 : 5)}
+                    r={isSelected ? (zoomArg ? 10 : 7.5) : zoomArg ? 7 : 5.5}
                     fill="white"
-                    stroke="#334155"
+                    stroke="#0f3d4a"
                     strokeWidth={isSelected ? 2 : 1}
                   />
+                  <circle cx={cx} cy={cy} r={isSelected ? (zoomArg ? 7 : 5) : zoomArg ? 5 : 3.8} fill={color} />
 
-                  {/* Punto de color de recurso */}
-                  <circle
-                    cx={cx}
-                    cy={cy}
-                    r={isSelected ? (zoomLevel === 'argentina' ? 7 : 4.5) : (zoomLevel === 'argentina' ? 5 : 3.5)}
-                    fill={color}
-                  />
-
-                  {/* Etiqueta visible en zoom argentina o selección */}
-                  {(zoomLevel === 'argentina' || isSelected) && (
+                  {(zoomArg || isSelected) && (
                     <text
-                      x={cx + (zoomLevel === 'argentina' ? 10 : 8)}
+                      x={cx + (zoomArg ? 12 : 10)}
                       y={cy + 4}
-                      className="text-[11px] font-semibold fill-slate-800 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)] pointer-events-none"
+                      className="text-[13px] font-semibold fill-slate-800 pointer-events-none"
+                      style={{ paintOrder: 'stroke', stroke: '#ffffff', strokeWidth: 3 }}
                     >
                       {site.nombre}
                     </text>
@@ -182,26 +206,26 @@ export const MapWorld: React.FC = () => {
           </g>
         </svg>
 
-        {/* Tooltip flotante al pasar el mouse */}
+        {/* Tooltip flotante al pasar el mouse (solo escritorio) */}
         {hoveredSite && (
-          <div className="absolute bottom-2 left-2 right-2 sm:right-auto sm:max-w-xs bg-slate-900/90 text-white text-xs rounded-lg p-2.5 shadow-lg backdrop-blur-md pointer-events-none border border-slate-700 z-20">
-            <div className="flex items-center justify-between mb-1">
-              <span className="font-bold text-sm text-sky-300">{hoveredSite.nombre}</span>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase bg-slate-800 border border-slate-700">
+          <div className="hidden sm:block absolute bottom-2 left-2 max-w-xs bg-[#0f3d4a]/90 text-white text-xs p-2.5 shadow-lg backdrop-blur-md pointer-events-none border border-cyan-700 z-20">
+            <div className="flex items-center justify-between mb-1 gap-2">
+              <span className="font-bold text-sm text-cyan-200">{hoveredSite.nombre}</span>
+              <span className="px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-cyan-900 border border-cyan-700">
                 {hoveredSite.recurso}
               </span>
             </div>
-            <p className="text-slate-300 text-[11px] line-clamp-2">{hoveredSite.descripcion}</p>
-            <div className="mt-1.5 text-[10px] text-slate-400 flex items-center justify-between">
+            <p className="text-cyan-50/80 text-[11px] line-clamp-2">{hoveredSite.descripcion}</p>
+            <div className="mt-1.5 text-[10px] text-cyan-100/70 flex items-center justify-between">
               <span>{hoveredSite.pais}</span>
-              <span className="text-amber-400 font-medium">Click para cargar parámetros</span>
+              <span className="text-amber-300 font-medium">Click para cargar parámetros</span>
             </div>
           </div>
         )}
       </div>
 
-      {/* Leyenda al pie del mapa */}
-      <div className="flex items-center justify-between px-3 py-2 bg-white border-t border-slate-200 text-xs text-slate-600">
+      {/* Leyenda */}
+      <div className="flex items-center justify-between px-3 py-1.5 border-y border-cyan-100 bg-white/60 text-xs text-slate-600 shrink-0">
         <div className="flex items-center space-x-3">
           <div className="flex items-center space-x-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span>
@@ -216,7 +240,37 @@ export const MapWorld: React.FC = () => {
             <span>Olas</span>
           </div>
         </div>
-        <span className="text-[11px] text-slate-400 hidden sm:inline">Mapamundi TopoJSON 110m (100% offline)</span>
+        <span className="text-[11px] text-slate-500">{sitiosVisibles.length} sitios</span>
+      </div>
+
+      {/* Listado de emplazamientos: carrusel horizontal en celular, lista vertical en escritorio */}
+      {/* En escritorio la lista se posiciona absoluta: llena el alto disponible sin estirar la fila */}
+      <div className="lg:flex-1 lg:relative lg:min-h-[180px]">
+      <div className="flex lg:flex-col gap-1.5 p-2 overflow-x-auto lg:overflow-x-hidden lg:overflow-y-auto lg:absolute lg:inset-0">
+        {sitiosVisibles.map((site) => {
+          const isSelected = site.id === selectedSiteId;
+          return (
+            <button
+              key={site.id}
+              onClick={() => selectSite(site.id)}
+              className={`shrink-0 lg:shrink flex items-center gap-2 px-2.5 py-1.5 text-left text-xs border transition-colors w-[170px] lg:w-full ${
+                isSelected
+                  ? 'bg-cyan-50 border-cyan-500 border-l-4'
+                  : 'bg-white/70 border-[#eadcbc] hover:bg-white hover:border-cyan-300'
+              }`}
+            >
+              <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${dotClass(site.recurso)}`}></span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-semibold text-slate-800 truncate">{site.nombre}</span>
+                <span className="block text-[10px] text-slate-500 truncate">
+                  {site.pais} · {RECURSO_LABEL[site.recurso]}
+                </span>
+              </span>
+              {isSelected && <MapPin className="w-3.5 h-3.5 text-cyan-700 shrink-0" />}
+            </button>
+          );
+        })}
+      </div>
       </div>
     </div>
   );

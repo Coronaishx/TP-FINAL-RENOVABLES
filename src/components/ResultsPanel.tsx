@@ -72,7 +72,7 @@ export const ResultsPanel: React.FC = () => {
   const serieGrafico = simulationResults.serie_temporal.filter((p) => p.t_horas <= 72);
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm space-y-3 p-4">
+    <div className="flex flex-col h-full panel-mar overflow-hidden space-y-3 p-3 sm:p-4">
       {/* 1. Animación esquemática SVG */}
       <SchematicAnimation />
 

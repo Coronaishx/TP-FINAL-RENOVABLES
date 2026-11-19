@@ -33,9 +33,9 @@ export const ParameterPanel: React.FC = () => {
   const isOlas = site.recurso === 'olas';
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+    <div className="flex flex-col h-full panel-mar overflow-hidden">
       {/* Cabecera del panel */}
-      <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+      <div className="px-4 py-3 panel-mar-header flex items-center justify-between">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
             Parámetros de Simulación
@@ -550,7 +550,7 @@ export const ParameterPanel: React.FC = () => {
       {/* Modal para ingresar tabla de estados de mar CSV */}
       {showCsvModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-5 shadow-2xl space-y-3">
+          <div className="panel-mar max-w-md w-full p-5 shadow-2xl space-y-3">
             <h3 className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
               <Table className="w-4 h-4 text-orange-600" />
               Matriz de Estados de Mar (Dispersión H-T)

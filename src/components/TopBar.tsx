@@ -11,7 +11,7 @@ export const TopBar: React.FC = () => {
   } = useSimulatorStore();
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+    <header className="bg-[#fffcf5]/90 backdrop-blur-md border-b-[3px] border-teal-500 sticky top-0 z-30 shadow-md shadow-cyan-900/10">
       <div className="max-w-7xl mx-auto px-3 sm:px-6">
         {/* Fila principal (Desktop: todo en una fila / Mobile: logo + acciones) */}
         <div className="h-14 sm:h-16 flex items-center justify-between gap-2">

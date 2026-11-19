@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7cc8ec"/>
+      <stop offset="0.6" stop-color="#bfe6f6"/>
+      <stop offset="1" stop-color="#e8f7fb"/>
+    </linearGradient>
+    <linearGradient id="mar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0e7490"/>
+      <stop offset="0.35" stop-color="#0891b2"/>
+      <stop offset="0.75" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#5eead4"/>
+    </linearGradient>
+    <linearGradient id="arena" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e9d6ab"/>
+      <stop offset="0.25" stop-color="#f1e2bf"/>
+      <stop offset="1" stop-color="#f7ecd3"/>
+    </linearGradient>
+    <radialGradient id="sol" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fffbe6"/>
+      <stop offset="0.45" stop-color="#fff3c4" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#fff3c4" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="granos" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="4" r="1" fill="#d9c08d" opacity="0.55"/>
+      <circle cx="14" cy="9" r="0.8" fill="#cfb27a" opacity="0.5"/>
+      <circle cx="8" cy="17" r="0.9" fill="#e0c995" opacity="0.6"/>
+      <circle cx="19" cy="19" r="0.7" fill="#c9aa70" opacity="0.45"/>
+    </pattern>
+  </defs>
+
+  <!-- Cielo -->
+  <rect width="1440" height="330" fill="url(#cielo)"/>
+  <circle cx="1130" cy="150" r="170" fill="url(#sol)"/>
+  <circle cx="1130" cy="150" r="48" fill="#fffbea"/>
+
+  <!-- Nubes suaves -->
+  <g fill="#ffffff" opacity="0.75">
+    <ellipse cx="260" cy="110" rx="90" ry="20"/>
+    <ellipse cx="320" cy="96" rx="60" ry="22"/>
+    <ellipse cx="700" cy="70" rx="70" ry="14"/>
+    <ellipse cx="745" cy="60" rx="45" ry="15"/>
+  </g>
+
+  <!-- Mar -->
+  <rect y="320" width="1440" height="330" fill="url(#mar)"/>
+  <rect y="320" width="1440" height="3" fill="#e0f7fa" opacity="0.6"/>
+
+  <!-- Líneas de oleaje -->
+  <g fill="none" stroke="#e0fbff" stroke-linecap="round">
+    <path d="M0 380 Q 60 372 120 380 T 240 380 T 360 380 T 480 380 T 600 380 T 720 380 T 840 380 T 960 380 T 1080 380 T 1200 380 T 1320 380 T 1440 380" stroke-width="1.5" opacity="0.25"/>
+    <path d="M0 440 Q 80 428 160 440 T 320 440 T 480 440 T 640 440 T 800 440 T 960 440 T 1120 440 T 1280 440 T 1440 440" stroke-width="2" opacity="0.3"/>
+    <path d="M0 510 Q 100 494 200 510 T 400 510 T 600 510 T 800 510 T 1000 510 T 1200 510 T 1400 510 T 1600 510" stroke-width="2.5" opacity="0.35"/>
+    <path d="M0 575 Q 120 556 240 575 T 480 575 T 720 575 T 960 575 T 1200 575 T 1440 575" stroke-width="3" opacity="0.4"/>
+  </g>
+
+  <!-- Arena -->
+  <path d="M0 640 C 160 610 300 660 480 632 S 820 600 1000 630 S 1300 655 1440 622 L1440 900 L0 900 Z" fill="url(#arena)"/>
+  <path d="M0 640 C 160 610 300 660 480 632 S 820 600 1000 630 S 1300 655 1440 622 L1440 900 L0 900 Z" fill="url(#granos)"/>
+
+  <!-- Arena húmeda y espuma -->
+  <path d="M0 640 C 160 610 300 660 480 632 S 820 600 1000 630 S 1300 655 1440 622 L1440 650 C 1300 682 1150 652 1000 660 S 650 640 480 662 S 160 640 0 668 Z" fill="#d8c08f" opacity="0.45"/>
+  <path d="M0 636 C 160 606 300 656 480 628 S 820 596 1000 626 S 1300 651 1440 618" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+  <path d="M0 646 C 170 622 320 664 490 640 S 830 612 1010 638 S 1310 660 1440 630" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="3 9" stroke-linecap="round" opacity="0.8"/>
+</svg>

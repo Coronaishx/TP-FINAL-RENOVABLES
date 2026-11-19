@@ -7,3 +7,43 @@ html, body, #root {
   margin: 0;
   padding: 0;
 }
+
+body {
+  font-family: 'Roboto', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background-color: #bfe6f6;
+}
+
+/* Fondo fijo inspirado en el mar y la playa.
+   Se usa un pseudo-elemento fixed (en lugar de background-attachment: fixed)
+   porque funciona correctamente en iOS/Android. */
+.fondo-mar {
+  position: relative;
+  isolation: isolate;
+}
+.fondo-mar::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url('./assets/fondo-mar.svg');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+@layer components {
+  /* Recuadro principal: arena clara, esquinas a 90° y franja turquesa superior */
+  .panel-mar {
+    background-color: rgba(255, 252, 245, 0.96);
+    border: 1px solid #cfe9e6;
+    border-top: 3px solid #14b8a6;
+    box-shadow: 0 6px 18px -8px rgba(14, 116, 144, 0.35);
+    border-radius: 0;
+  }
+  /* Cabecera de recuadro en celeste suave */
+  .panel-mar-header {
+    background: linear-gradient(90deg, #e0f7fa 0%, #f4fbfb 100%);
+    border-bottom: 1px solid #cfe9e6;
+  }
+}
