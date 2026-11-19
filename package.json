@@ -1,0 +1,38 @@
+{
+  "name": "simulador-energias-marinas",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "d3-geo": "^3.1.1",
+    "lucide-react": "^0.475.0",
+    "qrcode": "^1.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.15.1",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/d3-geo": "^3.1.0",
+    "@types/node": "^20.17.19",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/topojson-client": "^3.1.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.14",
+    "vitest": "^2.1.8"
+  }
+}
