@@ -177,7 +177,16 @@ export const MapWorld: React.FC = () => {
                   <circle cx={cx} cy={cy} r={14} fill="transparent" />
 
                   {isSelected && (
-                    <circle cx={cx} cy={cy} r={zoomArg ? 14 : 10} fill={color} opacity={0.3} className="animate-ping" />
+                    // Halo pulsante centrado en el propio punto (animación SVG nativa)
+                    <circle cx={cx} cy={cy} r={zoomArg ? 10 : 7.5} fill={color} opacity={0.5} pointerEvents="none">
+                      <animate
+                        attributeName="r"
+                        values={zoomArg ? '10;22' : '7.5;16'}
+                        dur="1.4s"
+                        repeatCount="indefinite"
+                      />
+                      <animate attributeName="opacity" values="0.55;0" dur="1.4s" repeatCount="indefinite" />
+                    </circle>
                   )}
 
                   <circle

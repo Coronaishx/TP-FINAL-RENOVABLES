@@ -19,6 +19,9 @@ export const SchematicAnimation: React.FC = () => {
   const site = sitios.find((s) => s.id === selectedSiteId);
   const animFrameRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(performance.now());
+  // Ángulo acumulado del rotor de corriente (gira proporcional a la velocidad del agua)
+  const rotorAngleRef = useRef<number>(0);
+  const rotorLastRef = useRef<number>(performance.now());
 
   // Loop de animación fluido
   useEffect(() => {
@@ -74,6 +77,19 @@ export const SchematicAnimation: React.FC = () => {
   // Variables dinámicas para corriente
   const velCorriente = Math.abs(Math.sin(faseM2)) * 3.2;
   const flujoFlujo = Math.sin(faseM2) >= 0; // true: flujo (hacia der), false: reflujo (hacia izq)
+
+  // Avance del rotor: 1 vuelta cada 3.5/v segundos reales (equivalente a la versión anterior)
+  {
+    const ahora = performance.now();
+    const dt = Math.min(0.1, (ahora - rotorLastRef.current) / 1000);
+    rotorLastRef.current = ahora;
+    if (!isPaused && velCorriente > 0.8) {
+      // Gira en un sentido con el flujo y en el opuesto con el reflujo, sin saltos
+      const sentido = flujoFlujo ? 1 : -1;
+      rotorAngleRef.current = (rotorAngleRef.current + sentido * dt * (360 * velCorriente) / 3.5) % 360;
+    }
+  }
+  const rotorAngle = rotorAngleRef.current;
 
   // Variables dinámicas para olas
   const alturaOlaM = 2.0 + 0.8 * Math.sin((simTimeSeconds / 4) * Math.PI);
@@ -175,13 +191,18 @@ export const SchematicAnimation: React.FC = () => {
                   <g transform="translate(250, 150)">
                     {/* Bulbo estator */}
                     <ellipse cx="0" cy="0" rx="16" ry="12" fill="#64748b" />
-                    {/* Aspas con rotación continua */}
-                    <g
-                      style={{
-                        transformOrigin: '0 0',
-                        animation: generandoPresa ? 'spin 1.2s linear infinite' : 'none',
-                      }}
-                    >
+                    {/* Aspas con rotación continua (rotación SVG nativa sobre su propio eje) */}
+                    <g>
+                      {generandoPresa && (
+                        <animateTransform
+                          attributeName="transform"
+                          type="rotate"
+                          from="0 0 0"
+                          to="360 0 0"
+                          dur="1.2s"
+                          repeatCount="indefinite"
+                        />
+                      )}
                       <line x1="-14" y1="0" x2="14" y2="0" stroke="#facc15" strokeWidth="3" />
                       <line x1="0" y1="-14" x2="0" y2="14" stroke="#facc15" strokeWidth="3" />
                     </g>
@@ -229,19 +250,15 @@ export const SchematicAnimation: React.FC = () => {
             {/* Góndola de la turbina */}
             <rect x="235" y="95" width="40" height="18" rx="4" fill="#64748b" stroke="#94a3b8" strokeWidth="1" />
 
-            {/* Rotor giratorio */}
-            <g
-              transform="translate(235, 104)"
-              style={{
-                transformOrigin: '235px 104px',
-                animation: velCorriente > 0.8 ? `spin ${Math.max(0.6, 3.5 / velCorriente)}s linear infinite` : 'none',
-              }}
-            >
+            {/* Rotor giratorio: el grupo externo posiciona, el interno gira sobre su eje */}
+            <g transform="translate(235, 104)">
+            <g transform={`rotate(${rotorAngle.toFixed(1)})`}>
               {/* 3 palas simétricas */}
               <line x1="0" y1="0" x2="0" y2="-45" stroke="#2dd4bf" strokeWidth="4" strokeLinecap="round" />
               <line x1="0" y1="0" x2="39" y2="22" stroke="#2dd4bf" strokeWidth="4" strokeLinecap="round" />
               <line x1="0" y1="0" x2="-39" y2="22" stroke="#2dd4bf" strokeWidth="4" strokeLinecap="round" />
               <circle cx="0" cy="0" r="5" fill="#facc15" />
+            </g>
             </g>
 
             {/* Flechas de flujo de corriente reversibles */}
@@ -299,18 +316,21 @@ export const SchematicAnimation: React.FC = () => {
                   {/* Ducto de aire vertical superior */}
                   <rect x="220" y="15" width="22" height="30" fill="#292524" stroke="#78716c" strokeWidth="1" />
 
-                  {/* Turbina Wells dentro del ducto */}
-                  <g
-                    transform="translate(231, 30)"
-                    style={{
-                      transformOrigin: '231px 30px',
-                      // LA TURBINA WELLS SIEMPRE GIRA EN EL MISMO SENTIDO
-                      animation: 'spin 0.8s linear infinite',
-                    }}
-                  >
+                  {/* Turbina Wells dentro del ducto: SIEMPRE gira en el mismo sentido */}
+                  <g transform="translate(231, 30)">
+                  <g>
+                    <animateTransform
+                      attributeName="transform"
+                      type="rotate"
+                      from="0 0 0"
+                      to="360 0 0"
+                      dur="0.8s"
+                      repeatCount="indefinite"
+                    />
                     <line x1="-9" y1="0" x2="9" y2="0" stroke="#f97316" strokeWidth="3" strokeLinecap="round" />
                     <line x1="0" y1="-9" x2="0" y2="9" stroke="#f97316" strokeWidth="3" strokeLinecap="round" />
                     <circle cx="0" cy="0" r="3" fill="#ffffff" />
+                  </g>
                   </g>
 
                   {/* Flechas de flujo de aire bidireccional */}
