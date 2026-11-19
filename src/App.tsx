@@ -63,21 +63,21 @@ export const App: React.FC = () => {
       <TopBar />
 
       {/* Contenido principal según pestaña activa */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-4 md:p-6 overflow-hidden">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-2.5 sm:p-4 md:p-6 overflow-x-hidden">
         {activeTab === 'simulador' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full min-h-[640px]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 h-full min-h-0 lg:min-h-[640px]">
             {/* Zona 1: Mapa (40% ≈ 5 columnas) */}
-            <div className="lg:col-span-5 h-[360px] lg:h-auto min-h-[380px]">
+            <div className="lg:col-span-5 h-[280px] sm:h-[340px] lg:h-auto lg:min-h-[380px]">
               <MapWorld />
             </div>
 
             {/* Zona 2: Parámetros (25% ≈ 3 columnas) */}
-            <div className="lg:col-span-3 h-[520px] lg:h-auto overflow-hidden">
+            <div className="lg:col-span-3 h-auto min-h-[460px] lg:h-auto overflow-hidden">
               <ParameterPanel />
             </div>
 
             {/* Zona 3: Resultados y Esquema (35% ≈ 4 columnas) */}
-            <div className="lg:col-span-4 h-full overflow-y-auto">
+            <div className="lg:col-span-4 h-auto lg:h-full lg:overflow-y-auto">
               <ResultsPanel />
             </div>
           </div>

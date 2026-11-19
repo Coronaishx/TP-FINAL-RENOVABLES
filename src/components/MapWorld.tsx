@@ -43,20 +43,30 @@ export const MapWorld: React.FC = () => {
   return (
     <div className="relative flex flex-col h-full bg-slate-900/5 rounded-xl border border-slate-200 overflow-hidden shadow-sm">
       {/* Barra superior de controles del mapa */}
-      <div className="flex items-center justify-between px-3 py-2 bg-white/90 border-b border-slate-200 z-10 backdrop-blur-sm">
-        <div className="flex items-center space-x-2">
-          <Compass className="w-4 h-4 text-slate-600" />
-          <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-            {zoomLevel === 'world' ? 'Mapa Global de Emplazamientos' : 'Costa Patagónica y Mar Argentino'}
+      <div className="flex items-center justify-between px-3 py-2 bg-white/90 border-b border-slate-200 z-10 backdrop-blur-sm gap-1">
+        <div className="flex items-center space-x-1.5 min-w-0">
+          <Compass className="w-4 h-4 text-slate-600 shrink-0" />
+          <span className="text-[11px] sm:text-xs font-semibold text-slate-700 uppercase tracking-wider truncate">
+            {zoomLevel === 'world' ? (
+              <>
+                <span className="sm:hidden">Mapa Global</span>
+                <span className="hidden sm:inline">Mapa Global de Emplazamientos</span>
+              </>
+            ) : (
+              <>
+                <span className="sm:hidden">Costa Argentina</span>
+                <span className="hidden sm:inline">Costa Patagónica y Mar Argentino</span>
+              </>
+            )}
           </span>
         </div>
 
-        <div className="flex items-center space-x-1.5">
+        <div className="flex items-center space-x-1 shrink-0">
           <button
             onClick={() => setZoomLevel('world')}
-            className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
+            className={`px-2 py-1 text-[11px] sm:text-xs font-medium rounded transition-colors ${
               zoomLevel === 'world'
-                ? 'bg-blue-600 text-white shadow-sm'
+                ? 'bg-blue-600 text-white shadow-xs'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
             title="Ver mapa mundial completo"
@@ -65,14 +75,15 @@ export const MapWorld: React.FC = () => {
           </button>
           <button
             onClick={() => setZoomLevel('argentina')}
-            className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
+            className={`px-2 py-1 text-[11px] sm:text-xs font-medium rounded transition-colors ${
               zoomLevel === 'argentina'
-                ? 'bg-blue-600 text-white shadow-sm'
+                ? 'bg-blue-600 text-white shadow-xs'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
             title="Zoom a la costa argentina y patagónica"
           >
-            🇦🇷 Zoom Argentina
+            <span className="sm:hidden">🇦🇷 Arg.</span>
+            <span className="hidden sm:inline">🇦🇷 Zoom Argentina</span>
           </button>
         </div>
       </div>

@@ -103,22 +103,22 @@ export const ModoExposicion: React.FC = () => {
       </div>
 
       {/* Contenido principal en 2 columnas de alto contraste */}
-      <div className="flex-1 grid grid-cols-12 gap-6 my-4 overflow-hidden items-stretch">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 my-2 lg:my-4 overflow-y-auto lg:overflow-hidden items-stretch">
         {/* Columna Izquierda: Esquema animado grande (7 cols) */}
-        <div className="col-span-7 flex flex-col justify-between bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
-          <div className="flex-1 min-h-[360px] flex items-center justify-center">
+        <div className="lg:col-span-7 flex flex-col justify-between bg-slate-900 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xl">
+          <div className="flex-1 min-h-[300px] sm:min-h-[360px] flex items-center justify-center">
             <SchematicAnimation />
           </div>
 
           <div className="mt-4 p-4 bg-slate-950/80 rounded-xl border border-slate-800/80">
-            <p className="text-base text-slate-200 leading-relaxed font-sans">
+            <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-sans">
               {site.descripcion}
             </p>
           </div>
         </div>
 
         {/* Columna Derecha: Tarjetas gigantes de resultados (5 cols) */}
-        <div className="col-span-5 flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-5 flex flex-col justify-between space-y-4">
           {/* Card 1: Factor de Planta Gigante */}
           <div className="p-6 bg-gradient-to-br from-blue-900/40 to-slate-900 border-2 border-blue-500/50 rounded-2xl flex flex-col justify-between shadow-xl">
             <div className="flex items-center justify-between text-blue-400">
